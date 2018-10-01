@@ -1,0 +1,19 @@
+{
+  /**
+   * Install Chrome Debugger Extension for Visual Studio Code to debug your components with the
+   * Chrome browser: https://aka.ms/spfx-debugger-extensions
+   */
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Test",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/dist/debug.js",
+      "sourceMaps": false,
+      "outFiles": [
+        "${workspaceRoot}/dist/**/*.js"
+      ],
+    }
+  ]
+}

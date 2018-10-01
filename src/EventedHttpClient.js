@@ -14,7 +14,7 @@ import tlv from './lib/tlv';
 
 import { splitGen as split } from './lib/string';
 
-const debug = require('debug')('hap-client:http');
+const debug = console.log; // require('debug')('hap-client:http');
 
 function readChunk() {
     // read one line
@@ -138,8 +138,7 @@ class EventedHttpClient
                     };
 
                     request =
-                        this
-                            ::runMiddleware(
+                        this::runMiddleware(
                                 'handleRequest',
                                 request
                             );

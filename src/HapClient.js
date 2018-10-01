@@ -3,7 +3,8 @@ import { Observable, Subject } from 'rxjs';
 
 import srp from 'fast-srp-hap';
 import HKDF from 'node-hkdf-sync';
-import { api as Sodium } from 'sodium';
+// import { api as Sodium } from 'sodium';
+import * as Sodium from 'sodium-universal';
 import uuidv5 from 'uuidv5';
 
 import EventedHttpClient from './EventedHttpClient';
@@ -13,7 +14,7 @@ import Cryptographer from './lib/cryptographer';
 import AuthHeader from './lib/authorization';
 import SecureStore from './SecureStore';
 
-const debug = require('debug')('hap-client:hap');
+const debug = console.log; // = require('debug')('hap-client:hap');
 
 const { Tag } = tlv;
 
@@ -51,21 +52,19 @@ function getSession(secureStore, seed) {
         .getClient()
         .flatMap(
             clientInfo => {
-                let saveClientInfo =
-                    Observable
-                        .empty();
+                let saveClientInfo = Observable.empty();
 
-                if (!clientInfo.longTerm) {
+                if (!clientInfo.longTerm || !clientInfo.longTerm.publicKey || !clientInfo.longTerm.secretKey) {
                     debug('Generating long-term keys');
-                    clientInfo.longTerm =
-                        Sodium.crypto_sign_keypair();
+                    var pk = new Buffer(Sodium.crypto_sign_PUBLICKEYBYTES);
+                    var sk = new Buffer(Sodium.crypto_sign_SECRETKEYBYTES);
+        
+                    Sodium.crypto_sign_keypair(pk, sk);
 
-                     saveClientInfo =
-                        Observable
-                            .from(
-                                clientInfo.save()
-                            )
-                            .ignoreElements();
+                    clientInfo.longTerm.publicKey = pk;
+                    clientInfo.longTerm.secretKey = sk;
+
+                    saveClientInfo = Observable.from(clientInfo.save()).ignoreElements();
                 }
 
                 debug('Reusing long-term keys');
@@ -288,11 +287,9 @@ class HapClient
                         session.clientInfo.longTerm.publicKey
                     ]);
 
-            const signature =
-                Sodium
-                    .crypto_sign_detached(
-                        material,
-                        session.clientInfo.longTerm.secretKey);
+            // const signature = Sodium.crypto_sign_detached(material, session.clientInfo.longTerm.secretKey);
+            var signature = new Buffer(Sodium.crypto_sign_BYTES);
+            Sodium.crypto_sign_detached(signature, material, session.clientInfo.longTerm.secretKey);
 
             const message =
                 tlv.encode(
@@ -397,8 +394,9 @@ class HapClient
         const privateKey = Buffer.alloc(32);
         Sodium.randombytes_buf(privateKey);
 
-        const publicKey =
-            Sodium.crypto_scalarmult_base(privateKey);
+        // Original: const publicKey = Sodium.crypto_scalarmult_base(privateKey);
+        const publicKey = new Buffer(Sodium.crypto_box_PUBLICKEYBYTES);
+        Sodium.crypto_scalarmult_base(publicKey, privateKey);
 
         return Observable
             .defer(
@@ -448,12 +446,9 @@ class HapClient
             }
 
             //   3. Convert to shared key
-            session.sharedKey =
-                Sodium
-                    .crypto_scalarmult(
-                        session.privateKey,
-                        serverPublicKey
-                    );
+            // Original: session.sharedKey = Sodium.crypto_scalarmult(session.privateKey, serverPublicKey);
+            session.sharedKey = new Buffer(Sodium.crypto_scalarmult_BYTES);
+            Sodium.crypto_scalarmult(session.sharedKey, session.privateKey, serverPublicKey);
                 
             session.encryptionKey = 
                 new HKDF(
@@ -508,14 +503,14 @@ class HapClient
                                         session.serverPublicKey
                                     ]);
 
+                            var tlvSignature = new Buffer(Sodium.crypto_sign_BYTES);
+                            Sodium.crypto_sign_detached(tlvSignature, material, session.clientInfo.longTerm.secretKey);
                             const plaintext =
                                 tlv.encode(
                                     Tag.Username, clientId,
                                     Tag.Signature, 
-                                        Sodium
-                                            .crypto_sign_detached(
-                                                material,
-                                                session.clientInfo.longTerm.secretKey)
+                                    // Sodium.crypto_sign_detached(material, session.clientInfo.longTerm.secretKey);
+                                    tlvSignature
                                 );
 
                             const [ encrypted, seal ] =

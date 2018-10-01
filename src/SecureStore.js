@@ -1,19 +1,16 @@
 import { Observable } from 'rxjs';
-import Keytar from 'keytar';
+//import Keytar from 'keytar';
+import Keytar from './KeytarDummy';
 
-const debug = require('debug')('hap-client:securestore');
+const debug = console.log; // require('debug')('hap-client:securestore');
 
 function loadClient(clientName) {
-    return Observable
-        .defer(
-            () =>
-                Keytar
-                    .getPassword(clientName, 'clientInfo')
-        )
-        .map(
-            json =>
-                new SecureClientInfo(clientName, json)
-        )
+    return Observable.defer(
+        () =>
+            Keytar.getPassword(clientName, 'clientInfo')
+    ).map(
+        json =>
+            new SecureClientInfo(clientName, json))
 }
 
 function saveClient(self) {
@@ -23,7 +20,7 @@ function saveClient(self) {
             'clientInfo',
             JSON.stringify(self)
         )
-    .then(() => self);
+        .then(() => self);
 }
 
 function load(clientName, username) {
@@ -36,8 +33,7 @@ function load(clientName, username) {
         .map(
             json =>
                 new SecureAccessoryInfo(clientName, username, json)
-        )
-        ;
+        );
 }
 
 function save(self) {
@@ -52,8 +48,7 @@ function save(self) {
         .then(() => self);
 }
 
-class SecureAccessoryInfo
-{
+class SecureAccessoryInfo {
     constructor(clientName, username, json) {
         this._username = username;
         this._clientName = clientName;
@@ -99,8 +94,7 @@ class SecureAccessoryInfo
     }
 }
 
-class SecureClientInfo
-{
+class SecureClientInfo {
     constructor(clientName, json) {
         this._clientName = clientName;
 
@@ -111,7 +105,7 @@ class SecureClientInfo
                 publicKey: Buffer.from(data.longTerm.publicKey, 'base64')
             };
         } else {
-            this._longTerm = '';
+            this._longTerm = {};
         }
     }
 

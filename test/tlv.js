@@ -3,7 +3,6 @@ var assert = require('assert');
 const tlv = require('../dist/lib/tlv.js').default;
 //const tlv = require('/home/zb/stuff/hap-server/HAP-NodeJS/lib/util/tlv.js');
 
-
 console.dir(tlv);
 
 describe('tlv', function() {
