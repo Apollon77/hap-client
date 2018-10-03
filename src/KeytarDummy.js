@@ -8,6 +8,7 @@ const KeytarDummy = {
         // let password = keytarStore[`${service}/${account}`];
 
         let path = `${service}-${account}.json`;
+        path = path.replace(/:/g, "-");
         if (fs.existsSync(path)) {
             return Promise.resolve(fs.readFileSync(path, "UTF8"));
         }
@@ -24,6 +25,7 @@ const KeytarDummy = {
         console.log(`Keytar.set ${service}/${account} ${password}`);
 
         let path = `${service}-${account}.json`;
+        path = path.replace(/:/g, "-");
         fs.writeFileSync(path, password);
         // keytarStore[`${service}/${account}`] = password;
 

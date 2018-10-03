@@ -61,6 +61,7 @@
   "homepage": "https://github.com/forty2/hap-client#readme",
   "dependencies": {
     "buffer-reader": "^0.1.0",
+    "buffer-shims": "^1.0.0",
     "enum": "^2.4.0",
     "fast-srp-hap": "^1.0.1",
     "message-socket": "^1.0.3",

@@ -3,4 +3,4 @@ node_modules/
 unlock.py
 *.pdf
 src/debug.js
-*-clientinfo.json
+*-*.json

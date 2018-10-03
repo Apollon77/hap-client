@@ -1,3 +1,5 @@
+Fork of https://github.com/forty2/hap-client - native keytar and sodium dependencies removed. 
+
 # hap-client
 > Connect to and control HomeKit devices from Node
 
@@ -105,7 +107,7 @@ Given a set of accessory ID and instance ID pairs, returns an Observable that em
 
 ```javascript
 client
-  .getAccessories(1, 10, 1, 11)
+  .getCharacteristics(1, 10, 1, 11)
   .subscribe(
       data => console.log(JSON.stringify(data))
   );
@@ -136,7 +138,7 @@ might emit (formatted):
 
 ```javascript
 client
-  .setAccessories({ aid: 1, iid: 11, value: true })
+  .setCharacteristics({ aid: 1, iid: 11, value: true })
   .subscribe();
 ```
 

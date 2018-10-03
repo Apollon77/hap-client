@@ -4,7 +4,7 @@ class AuthHeader {
     }
 
     handleRequest(req) {
-        req.headers['Authorization'] = this._authcode;
+        req.headers['Authorization'] = this._authCode;
         return req;
     }
 }
