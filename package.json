@@ -19,7 +19,7 @@
     "build": "babel src -d dist -D",
     "clean": "rm -rf dist/",
     "test": "mocha",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "author": "Zach Bean <zb@forty2.com>",
   "license": "MIT",
