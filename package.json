@@ -1,11 +1,11 @@
 {
-  "name": "hap-client",
-  "version": "1.0.3",
+  "name": "@apollon77/hap-client",
+  "version": "1.1.0",
   "description": "Control HomeKit-enabled devices with Node",
   "main": "dist/HapClient.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/forty2/hap-client.git"
+    "url": "git+https://github.com/Apollon77/hap-client.git"
   },
   "keywords": [
     "homekit",
@@ -18,21 +18,21 @@
   "scripts": {
     "build": "babel src -d dist -D",
     "clean": "rm -rf dist/",
-    "test": "mocha",
+    "test": "mocha --exit",
     "prepare": "npm run build"
   },
   "author": "Zach Bean <zb@forty2.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.14.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-plugin-syntax-function-bind": "^6.13.0",
-    "babel-plugin-transform-function-bind": "^6.8.0",
-    "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-preset-env": "^1.4.0",
-    "debug": "^2.6.4",
-    "mocha": "^3.3.0",
-    "simple-plist": "^0.2.1"
+    "babel-plugin-transform-function-bind": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "debug": "^4.3.2",
+    "mocha": "^9.0.3",
+    "simple-plist": "^1.1.1"
   },
   "babel": {
     "sourceMaps": "inline",
@@ -41,7 +41,7 @@
         "env",
         {
           "targets": {
-            "node": 6
+            "node": 12
           }
         }
       ]
@@ -53,22 +53,23 @@
     ]
   },
   "engines": {
-    "node": ">=6.0"
+    "node": ">=12.0"
   },
   "bugs": {
-    "url": "https://github.com/forty2/hap-client/issues"
+    "url": "https://github.com/Apollon77/hap-client/issues"
   },
-  "homepage": "https://github.com/forty2/hap-client#readme",
+  "homepage": "https://github.com/Apollon77/hap-client#readme",
   "dependencies": {
     "buffer-reader": "^0.1.0",
     "buffer-shims": "^1.0.0",
+    "debug": "^4.3.2",
     "enum": "^2.4.0",
     "fast-srp-hap": "^1.0.1",
-    "message-socket": "^1.0.3",
+    "message-socket": "^1.0.4",
     "node-hkdf-sync": "^1.0.0",
-    "rxjs": "^5.3.0",
+    "rxjs": "^5.5.12",
     "sodium-universal": "^2.0.0",
-    "source-map-support": "^0.4.15",
+    "source-map-support": "^0.5.19",
     "uuidv5": "^1.0.0"
   }
 }
