@@ -1,10 +1,12 @@
 // import { Observable } from 'rxjs';
 import fs from "fs";
 
+const debug = require('debug')('hap-client:keytardummy');
+
 // let keytarStore = {};
 const KeytarDummy = {
     getPassword: function (service, account) {
-        console.log(`Keytar.get ${service}/${account}`);
+        debug(`Keytar.get ${service}/${account}`);
         // let password = keytarStore[`${service}/${account}`];
 
         let path = `${service}-${account}.json`;
@@ -22,7 +24,7 @@ const KeytarDummy = {
         return Promise.resolve(undefined);
     },
     setPassword: function (service, account, password) {
-        console.log(`Keytar.set ${service}/${account} ${password}`);
+        debug(`Keytar.set ${service}/${account} ${password}`);
 
         let path = `${service}-${account}.json`;
         path = path.replace(/:/g, "-");

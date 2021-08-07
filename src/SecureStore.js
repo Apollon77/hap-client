@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 //import Keytar from 'keytar';
 import Keytar from './KeytarDummy';
 
-const debug = console.log; // require('debug')('hap-client:securestore');
+const debug = require('debug')('hap-client:securestore');
 
 function loadClient(clientName) {
     return Observable.defer(

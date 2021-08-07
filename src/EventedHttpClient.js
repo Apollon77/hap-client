@@ -14,7 +14,7 @@ import tlv from './lib/tlv';
 
 import { splitGen as split } from './lib/string';
 
-const debug = console.log; // require('debug')('hap-client:http');
+const debug = require('debug')('hap-client:http');
 
 function readChunk() {
     // read one line
@@ -287,7 +287,7 @@ class EventedHttpClient
                             debug('partial message; returning');
                             return [ [], buffer.buf ];
                         }
-                    } else if (headers['transfer-encoding'].toLowerCase() === 'chunked') {
+                    } else if (headers['transfer-encoding'] && headers['transfer-encoding'].toLowerCase() === 'chunked') {
                         // TODO: read chunked encoding
                         debug(`Reading chunked bytes for body`);
 

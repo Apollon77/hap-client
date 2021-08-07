@@ -14,7 +14,7 @@ import Cryptographer from './lib/cryptographer';
 import AuthHeader from './lib/authorization';
 import SecureStore from './SecureStore';
 
-const debug = console.log; // = require('debug')('hap-client:hap');
+const debug = require('debug')('hap-client:hap');
 
 const { Tag } = tlv;
 
@@ -29,10 +29,10 @@ const ErrorCode =
         MaxAuthenticationAttempts: 0x06
     });
 
-const PairStep = 
+const PairStep =
     new Enum({
         StartRequest:        0x01,
-        StartResponse:       0x02, 
+        StartResponse:       0x02,
         VerifyRequest:       0x03,
         VerifyResponse:      0x04,
         KeyExchangeRequest:  0x05,
@@ -42,7 +42,7 @@ const PairStep =
 const VerifyStep =
     new Enum({
         StartRequest:        0x01,
-        StartResponse:       0x02, 
+        StartResponse:       0x02,
         FinishRequest:       0x03,
         FinishResponse:      0x04
     });
@@ -58,7 +58,7 @@ function getSession(secureStore, seed) {
                     debug('Generating long-term keys');
                     var pk = new Buffer(Sodium.crypto_sign_PUBLICKEYBYTES);
                     var sk = new Buffer(Sodium.crypto_sign_SECRETKEYBYTES);
-        
+
                     Sodium.crypto_sign_keypair(pk, sk);
 
                     clientInfo.longTerm.publicKey = pk;
@@ -100,7 +100,7 @@ function handleResponse(vtable, steps, session, completeCondition = () => false)
             if (errorCode) {
                 return Observable.throw(new Error("Pairing failure: " + ErrorCode.get(errorCode).key));
             }
-            
+
             const step = steps.get(data[Tag.Sequence][0]);
 
             debug("--> [%d] %o", step, data)
@@ -319,7 +319,7 @@ class HapClient
             return session.http
                 .post('/pair-setup', container, PairingContentType);
         }
-        
+
         function handlePairKeyExchangeResponse(response, data, session) {
             debug('got a key exchange response');
 
@@ -449,8 +449,8 @@ class HapClient
             // Original: session.sharedKey = Sodium.crypto_scalarmult(session.privateKey, serverPublicKey);
             session.sharedKey = new Buffer(Sodium.crypto_scalarmult_BYTES);
             Sodium.crypto_scalarmult(session.sharedKey, session.privateKey, serverPublicKey);
-                
-            session.encryptionKey = 
+
+            session.encryptionKey =
                 new HKDF(
                     'sha512',
                     'Pair-Verify-Encrypt-Salt',
@@ -508,7 +508,7 @@ class HapClient
                             const plaintext =
                                 tlv.encode(
                                     Tag.Username, clientId,
-                                    Tag.Signature, 
+                                    Tag.Signature,
                                     // Sodium.crypto_sign_detached(material, session.clientInfo.longTerm.secretKey);
                                     tlvSignature
                                 );
@@ -622,7 +622,7 @@ class HapClient
             ._verifyPairing()
             .ignoreElements();
     }
-    
+
     identify() {
         return this._client.get('/identify');
     }
@@ -635,7 +635,7 @@ class HapClient
                     client
                         .get('/accessories')
                         .map(
-                            ({ status, body }) =>
+                            ({ status, body, statusText }) =>
                                 (status >= 200 && status < 400)
                                     ? body
                                     : Observable.throw(new Error(statusText))
@@ -666,7 +666,7 @@ class HapClient
                                     .get(`/characteristics?id=${query}`)
                         )
                         .map(
-                            ({ status, body }) =>
+                            ({ status, body, statusText }) =>
                                 (status >= 200 && status < 400)
                                     ? body
                                     : Observable.throw(new Error(statusText))
@@ -687,7 +687,7 @@ class HapClient
                         )
             )
             .map(
-                ({ status, body }) =>
+                ({ status, body, statusText }) =>
                     (status >= 200 && status < 400)
                         ? body
                         : Observable.throw(new Error(statusText))
