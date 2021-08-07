@@ -4,3 +4,4 @@ unlock.py
 *.pdf
 src/debug.js
 *-*.json
+.idea/
