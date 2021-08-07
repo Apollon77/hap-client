@@ -58,6 +58,7 @@ class Cryptographer
             const packetSize = packet::remaining();
 
             let result = Buffer.alloc(0);
+            let originalDecryptCount = this.decryptCount;
             while (packet::remaining() > 0) {
                 const AAD = packet.nextBuffer(2);
                 const trueLength = AAD.readUInt16LE(0);
@@ -90,6 +91,12 @@ class Cryptographer
                     debug('packet: %s', packet.buf.toString('hex'));
                     return null;
                 }
+            }
+
+            if (_bufferreader.remaining.call(packet) > 0) {
+                // not complete, reset count
+                this.decryptCount = originalDecryptCount;
+                return Buffer.alloc(0);
             }
 
             return result;
