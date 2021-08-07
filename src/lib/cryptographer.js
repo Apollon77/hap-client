@@ -93,7 +93,7 @@ class Cryptographer
                 }
             }
 
-            if (_bufferreader.remaining.call(packet) > 0) {
+            if (packet::remaining() > 0) {
                 // not complete, reset count
                 this.decryptCount = originalDecryptCount;
                 return Buffer.alloc(0);
