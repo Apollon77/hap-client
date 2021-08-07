@@ -9,26 +9,26 @@ describe('tlv', function() {
     describe('#encode()', function() {
         it('should encode single fields of 1 byte', function() {
             const enc = tlv.encode(0x01, 0x7f);
-            assert(enc.equals(new Buffer([ 0x01, 0x01, 0x7f ])));
+            assert(enc.equals(Buffer.from([ 0x01, 0x01, 0x7f ])));
         });
 
         it('should encode multiple fields of 1 byte', function() {
             const enc = tlv.encode(0x01, 0x7f, 0x02, 0x91);
-            assert(enc.equals(new Buffer([ 0x01, 0x01, 0x7f, 0x02, 0x01, 0x91 ])));
+            assert(enc.equals(Buffer.from([ 0x01, 0x01, 0x7f, 0x02, 0x01, 0x91 ])));
         });
 
         it('should encode single fields of several bytes', function() {
             const enc = tlv.encode(0x01, Buffer.from('foobar', 'utf8'));
-            assert(enc.equals(new Buffer([ 0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72 ])));
+            assert(enc.equals(Buffer.from([ 0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72 ])));
         });
 
         it('should encode multiple fields of several bytes', function() {
             const enc = tlv.encode(0x01, Buffer.from('foobar', 'utf8'), 0x02, Buffer.from('bazquux', 'utf8'));
             assert(
                 enc.equals(
-                    new Buffer([
+                    Buffer.from([
                         0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72,
-                        0x02, 0x07, 0x62, 0x61, 0x7A, 0x71, 0x75, 0x75, 0x78 
+                        0x02, 0x07, 0x62, 0x61, 0x7A, 0x71, 0x75, 0x75, 0x78
                     ])
                 )
             );
@@ -42,8 +42,8 @@ describe('tlv', function() {
                 enc.equals(
                     Buffer
                         .concat([
-                            new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
-                            new Buffer([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129))
+                            Buffer.from([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
+                            Buffer.from([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129))
                         ])
                 )
             );
@@ -143,7 +143,7 @@ describe('tlv', function() {
             const test =
                 new Buffer([
                     0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72,
-                    0x02, 0x07, 0x62, 0x61, 0x7A, 0x71, 0x75, 0x75, 0x78 
+                    0x02, 0x07, 0x62, 0x61, 0x7A, 0x71, 0x75, 0x75, 0x78
                 ]);
 
             deepCompare(
@@ -156,7 +156,7 @@ describe('tlv', function() {
         });
 
         it('should decode single fields of loads of bytes', function() {
-            const test = 
+            const test =
                 Buffer
                     .concat([
                         new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
@@ -172,7 +172,7 @@ describe('tlv', function() {
         });
 
         it('should decode multiple fields of loads of bytes', function() {
-            const test = 
+            const test =
                 Buffer
                     .concat([
                         new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
