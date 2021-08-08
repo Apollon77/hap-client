@@ -55,7 +55,6 @@ class Cryptographer
     decrypt(message) {
         if (this.decryptKey.length > 0) {
             const packet = new BufferReader(message);
-            const packetSize = packet::remaining();
 
             let result = Buffer.alloc(0);
             let originalDecryptCount = this.decryptCount;
