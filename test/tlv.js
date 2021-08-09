@@ -62,10 +62,10 @@ describe('tlv', function() {
                 enc.equals(
                     Buffer
                         .concat([
-                            new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
-                            new Buffer([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129)),
-                            new Buffer([ 0x02, 0xFF ]), Buffer.from("x".repeat(255)),
-                            new Buffer([ 0x02, 0x81 ]), Buffer.from("x".repeat(129))
+                            Buffer.from([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
+                            Buffer.from([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129)),
+                            Buffer.from([ 0x02, 0xFF ]), Buffer.from("x".repeat(255)),
+                            Buffer.from([ 0x02, 0x81 ]), Buffer.from("x".repeat(129))
                         ])
                 )
             );
@@ -106,30 +106,30 @@ describe('tlv', function() {
         }
 
         it('should decode single fields of 1 byte', function() {
-            const test = new Buffer([ 0x01, 0x01, 0x7f ]);
+            const test = Buffer.from([ 0x01, 0x01, 0x7f ]);
 
             deepCompare(
                 {
-                    [0x01]: new Buffer([ 0x7f ])
+                    [0x01]: Buffer.from([ 0x7f ])
                 },
                 tlv.decode(test)
             );
         });
 
         it('should decode multiple fields of 1 byte', function() {
-            const test = new Buffer([ 0x01, 0x01, 0x7f, 0x02, 0x01, 0x91 ]);
+            const test = Buffer.from([ 0x01, 0x01, 0x7f, 0x02, 0x01, 0x91 ]);
 
             deepCompare(
                 {
-                    [0x01]: new Buffer([ 0x7f ]),
-                    [0x02]: new Buffer([ 0x91 ]),
+                    [0x01]: Buffer.from([ 0x7f ]),
+                    [0x02]: Buffer.from([ 0x91 ]),
                 },
                 tlv.decode(test)
             );
         });
 
         it('should decode single fields of several bytes', function() {
-            const test = new Buffer([ 0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72 ]);
+            const test = Buffer.from([ 0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72 ]);
 
             deepCompare(
                 {
@@ -141,7 +141,7 @@ describe('tlv', function() {
 
         it('should decode multiple fields of several bytes', function() {
             const test =
-                new Buffer([
+                Buffer.from([
                     0x01, 0x06, 0x66, 0x6F, 0x6F, 0x62, 0x61, 0x72,
                     0x02, 0x07, 0x62, 0x61, 0x7A, 0x71, 0x75, 0x75, 0x78
                 ]);
@@ -159,8 +159,8 @@ describe('tlv', function() {
             const test =
                 Buffer
                     .concat([
-                        new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
-                        new Buffer([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129))
+                        Buffer.from([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
+                        Buffer.from([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129))
                     ]);
 
             deepCompare(
@@ -175,10 +175,10 @@ describe('tlv', function() {
             const test =
                 Buffer
                     .concat([
-                        new Buffer([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
-                        new Buffer([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129)),
-                        new Buffer([ 0x02, 0xFF ]), Buffer.from("x".repeat(255)),
-                        new Buffer([ 0x02, 0x81 ]), Buffer.from("x".repeat(129))
+                        Buffer.from([ 0x01, 0xFF ]), Buffer.from(" ".repeat(255)),
+                        Buffer.from([ 0x01, 0x81 ]), Buffer.from(" ".repeat(129)),
+                        Buffer.from([ 0x02, 0xFF ]), Buffer.from("x".repeat(255)),
+                        Buffer.from([ 0x02, 0x81 ]), Buffer.from("x".repeat(129))
                     ]);
 
             deepCompare(
