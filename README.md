@@ -1,5 +1,3 @@
-Fork of https://github.com/forty2/hap-client - native keytar and sodium dependencies removed. 
-
 # hap-client
 > Connect to and control HomeKit devices from Node
 
@@ -8,6 +6,13 @@ Fork of https://github.com/forty2/hap-client - native keytar and sodium dependen
 ![Dependency status](https://david-dm.org/forty2/hap-client.svg)
 
 hap-client is a Node.js module for controlling HomeKit-enabled devices.  It's the client-side counterpart to HomeKit server emulators such as [HAP-NodeJS](https://github.com/KhaosT/HAP-NodeJS/).
+
+## Credits and History
+* This Fork is based on https://github.com/kamilner/hap-client which removed native keytar and sodium dependencies.
+* The kamilner Fork is based on of https://github.com/forty2/hap-client
+
+Thanks to both and the community for the basic work.
+
 
 ## Installation
 
@@ -237,9 +242,31 @@ An empty event (which can happen) would look like this:
 }
 ```
 
+A real event would look like this:
+```json
+{
+  "type": "EVENT/1.0",
+  "status": "200",
+  "statusText": "OK",
+  "headers": {
+    "content-length": "80",
+    "content-type": "application/hap+json"
+  },
+  "body": {
+    "characteristics": [
+      {
+        "aid": 219838357355849,
+        "iid": 40897375069504,
+        "value": false
+      }
+    ]
+  }
+}
+```
+
 ## Contributing
 
-Contributions are of course always welcome.  If you find problems, please report them in the [Issue Tracker](http://www.github.com/forty2/hap-client/issues/).  If you've made an improvement, open a [pull request](http://www.github.com/forty2/hap-client/pulls).
+Contributions are of course always welcome.  If you find problems, please report them in the [Issue Tracker](http://www.github.com/Apollon77/hap-client/issues/).  If you've made an improvement, open a [pull request](http://www.github.com/Apollon77/hap-client/pulls).
 
 Getting set up for development is very easy:
 ```sh
@@ -257,10 +284,10 @@ yarn build
 yarn run clean
 ```
 
-## Release History
+## Changelog
 
-* 1.0.0
-    * The first release.
+### __WORK IN PROGRESS__
+* (Apollon77) Fix message Handling from older Forks
 
 ## Meta
 
