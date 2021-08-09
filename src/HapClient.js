@@ -694,6 +694,51 @@ class HapClient
             )
     }
 
+    removePairing() {
+        return this
+            ._ensureAuthenticated()
+            .flatMap(
+                client => {
+        const clientId = this._clientId;
+        const secureStore = new SecureStore(this._clientName);
+
+        // generate new encryption keys for this session
+        const privateKey = Buffer.alloc(32);
+        Sodium.randombytes_buf(privateKey);
+
+        // Original: const publicKey = Sodium.crypto_scalarmult_base(privateKey);
+        const publicKey = new Buffer(Sodium.crypto_box_PUBLICKEYBYTES);
+        Sodium.crypto_scalarmult_base(publicKey, privateKey);
+
+        return Observable
+            .defer(
+                () =>
+                    getSession(
+                        secureStore,
+                        {
+                            privateKey,
+                            publicKey,
+                            http: this._client
+                        })
+            )
+            .flatMap(
+                session => {
+                    const req = tlv.encode(
+                        Tag.PairingMethod, 0x04,
+                        Tag.Sequence, VerifyStep.StartRequest.value,
+                        Tag.Username, clientId
+                    );
+                    debug("encoded request: %o", req);
+
+                    //   1. POST my public key (etc) to /pair-verify
+                    return session.http.post('/pairings', req, PairingContentType)
+                        .takeLast(1);
+                }
+            )
+            ;
+    });
+    }
+
     close() {
         this._client.disconnect();
     }
