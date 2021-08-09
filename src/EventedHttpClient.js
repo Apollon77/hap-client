@@ -108,6 +108,8 @@ class EventedHttpClient
                 value: new Subject()
             }
         );
+
+        this.decryptedResponse = new BufferReader();
     }
 
     get messages() {
@@ -231,13 +233,29 @@ class EventedHttpClient
                     buf
                 );
 
-        if (processed.length == 0) {
+        let decrypted, rawRemaining;
+
+        if (Buffer.isBuffer(processed)) {
+            decrypted = processed;
+        } else if (processed) {
+            decrypted = decrypted || processed.decrypted;
+            rawRemaining = processed.rawRemaining;
+        }
+        decrypted = decrypted || [];
+        rawRemaining = rawRemaining || Buffer.alloc(0);
+
+        if (decrypted.length === 0) {
             // need more data.
-            return [ [], buf ];
+            return [ [], rawRemaining ];
         }
 
+        debug(`Remaining decrypted content from before: ${this.decryptedResponse.buf.toString('hex')}`);
+        this.decryptedResponse.append(decrypted);
         let parsed =
-            this._parseMessage(new BufferReader(processed));
+            this._parseMessage(this.decryptedResponse);
+        this.decryptedResponse = new BufferReader(parsed[1]);
+        debug(`Remaining decrypted content after message parsing: ${this.decryptedResponse.buf.toString('hex')}`);
+        parsed[1] = rawRemaining;
 
         return this
             ::runMiddleware(

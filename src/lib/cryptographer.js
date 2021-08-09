@@ -53,18 +53,19 @@ class Cryptographer
     }
 
     decrypt(message) {
+        debug('message to decrypt: ' + message.toString('hex'));
         if (this.decryptKey.length > 0) {
             const packet = new BufferReader(message);
 
             let result = Buffer.alloc(0);
-            let originalDecryptCount = this.decryptCount;
             while (packet::remaining() > 0) {
                 const AAD = packet.nextBuffer(2);
                 const trueLength = AAD.readUInt16LE(0);
                 const availableSize = packet::remaining() - 16; // 16 is the size of the HMAC
 
-                debug(`need ${trueLength} bytes and have ${availableSize} bytes`);
+                debug(`need ${trueLength} bytes and have ${availableSize} bytes (${this.decryptCount + 1})`);
                 if (trueLength > availableSize) {
+                    packet.move(-2);
                     // The packet is bigger than the available data; wait till more comes in
                     break;
                 }
@@ -92,16 +93,10 @@ class Cryptographer
                 }
             }
 
-            if (packet::remaining() > 0) {
-                // not complete, reset count
-                this.decryptCount = originalDecryptCount;
-                return Buffer.alloc(0);
-            }
-
-            return result;
+            return {decrypted: result, rawRemaining: packet.restAll()};
         }
 
-        return message;
+        return {decrypted: null, rawRemaining: message};
     }
 }
 
